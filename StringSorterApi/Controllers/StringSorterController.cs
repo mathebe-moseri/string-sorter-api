@@ -63,7 +63,8 @@ namespace StringSorterApi.Controllers
                     {
                         using var httpClient = new HttpClient();
 
-                        var response = await httpClient.GetAsync(request.Url);
+                // Send an HTTP GET request to the user-supplied URL to verify if the ENDPOINT IS REACHABLE
+                var response = await httpClient.GetAsync(request.Url);
 
                         return Ok(new
                         {
