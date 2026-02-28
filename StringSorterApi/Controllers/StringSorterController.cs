@@ -52,11 +52,37 @@ namespace StringSorterApi.Controllers
                         return BadRequest(new { error = "Email format is invalid." });
                     }
 
+                    // url format validation
+                    if (!Uri.TryCreate(request.Url, UriKind.Absolute, out var uri) ||
+                        (uri.Scheme != Uri.UriSchemeHttp && uri.Scheme != Uri.UriSchemeHttps))
+                    {
+                        return BadRequest(new { error = "Url must be a valid http/https address." });
+                    }
+                    // try calling the endpoint
+                    try
+                    {
+                        using var httpClient = new HttpClient();
 
+                        var response = await httpClient.GetAsync(request.Url);
 
+                        return Ok(new
+                        {
+                            email = request.Email,
+                            testedUrl = request.Url,
+                            statusCode = (int)response.StatusCode,
+                            isSuccess = response.IsSuccessStatusCode
+                        });
+                    }
+                    catch (Exception ex)
+                    {
+                        return BadRequest(new
+                        {
+                            email = request.Email,
+                            testedUrl = request.Url,
+                            error = ex.Message
+                        });
+                    }
 
-                    // passed validation (so far)
-                    return Ok(new { message = "Validation passed ✅" });
                 }
         }
 }
