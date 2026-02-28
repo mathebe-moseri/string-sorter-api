@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using StringSorterApi.Models;
 
 namespace StringSorterApi.Controllers
@@ -16,7 +15,14 @@ namespace StringSorterApi.Controllers
                 return BadRequest(new { error = "Data field is required." });
             }
 
-            return Ok("Endpoint working?");
+            char[] chars = request.Data!.ToCharArray();
+
+            Array.Sort(chars);
+
+            var word = chars.Select(c => c.ToString()).ToArray();
+
+            return Ok(new { word });
         }
+
     }
 }
