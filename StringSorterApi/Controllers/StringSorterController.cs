@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using StringSorterApi.Models;
+using System.Net.Mail;
 
 namespace StringSorterApi.Controllers
 {
@@ -36,10 +37,26 @@ namespace StringSorterApi.Controllers
                         return BadRequest(new { error = "Email and Url are required." });
                     }
 
-                    // passed validation, return something (for now)
+                    // validate email format
+                    try
+                    {
+                        var addr = new MailAddress(request.Email);
+
+                        if (addr.Address != request.Email.Trim())
+                        {
+                            return BadRequest(new { error = "Email format is invalid." });
+                        }
+                    }
+                    catch
+                    {
+                        return BadRequest(new { error = "Email format is invalid." });
+                    }
+
+
+
+
+                    // passed validation (so far)
                     return Ok(new { message = "Validation passed ✅" });
-
                 }
-
         }
 }
