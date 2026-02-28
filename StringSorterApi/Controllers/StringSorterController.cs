@@ -11,6 +11,11 @@ namespace StringSorterApi.Controllers
         [HttpPost]
         public IActionResult Sort([FromBody] SortRequest request)
         {
+            if (request == null || string.IsNullOrWhiteSpace(request.Data))
+            {
+                return BadRequest(new { error = "Data field is required." });
+            }
+
             return Ok("Endpoint working?");
         }
     }
