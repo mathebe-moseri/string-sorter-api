@@ -63,8 +63,21 @@ namespace StringSorterApi.Controllers
                     {
                         using var httpClient = new HttpClient();
 
-                // Send an HTTP GET request to the user-supplied URL to verify if the ENDPOINT IS REACHABLE
-                var response = await httpClient.GetAsync(request.Url);
+                        var sampleBody = new
+                        {
+                            email = request.Email,
+                            url = request.Url
+                        };
+
+                        var json = System.Text.Json.JsonSerializer.Serialize(sampleBody);
+
+                        var content = new StringContent(
+                            json,
+                            System.Text.Encoding.UTF8,
+                            "application/json"
+                        );
+
+                        var response = await httpClient.PostAsync(request.Url, content);
 
                         return Ok(new
                         {
@@ -83,7 +96,7 @@ namespace StringSorterApi.Controllers
                             error = ex.Message
                         });
                     }
-
+            
                 }
         }
 }
